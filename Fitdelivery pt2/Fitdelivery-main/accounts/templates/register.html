@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .register-container {
+        min-height: 100vh;
+        display: flex;
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                    url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover;
+        position: relative;
+    }
+
+    .content-wrapper {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .left-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 60px;
+        color: white;
+    }
+
+    .hero-text {
+        max-width: 600px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-text h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-text .highlight {
+        color: #FF3366;
+    }
+
+    .hero-text p {
+        font-size: 1.3rem;
+        font-weight: 300;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .right-section {
+        width: 450px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+    }
+
+    .form-container {
+        width: 100%;
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .form-header h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"] {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="password"]:focus {
+        outline: none;
+        border-color: #FF3366;
+        box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #FF3366, #FF1744);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #FF1744, #D50000);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 51, 102, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    .privacy-text {
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: #888;
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    .privacy-text a {
+        color: #FF3366;
+        text-decoration: none;
+    }
+
+    .privacy-text a:hover {
+        text-decoration: underline;
+    }
+
+    .error-messages {
+        color: #FF3366;
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        padding: 8px;
+        background: rgba(255, 51, 102, 0.1);
+        border-radius: 4px;
+        border-left: 3px solid #FF3366;
+    }
+
+    /* Estilização dos erros do Django */
+    .errorlist {
+        list-style: none;
+        color: #FF3366;
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        padding: 8px;
+        background: rgba(255, 51, 102, 0.1);
+        border-radius: 4px;
+        border-left: 3px solid #FF3366;
+    }
+
+    .errorlist li {
+        margin-bottom: 5px;
+    }
+
+    /* Animações */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsividade */
+    @media (max-width: 1024px) {
+        .content-wrapper {
+            flex-direction: column;
+        }
+        
+        .right-section {
+            width: 100%;
+            min-height: 50vh;
+        }
+        
+        .left-section {
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .hero-text h1 {
+            font-size: 3rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-text h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero-text p {
+            font-size: 1.1rem;
+        }
+        
+        .right-section {
+            padding: 30px;
+        }
+    }
+</style>
+
+<div class="register-container">
+    <div class="content-wrapper">
+        <div class="left-section">
+            <div class="hero-text">
+                <h1>Encontre os melhores <span class="highlight">suplementos</span></h1>
+                <p>Acesse nossa loja online e descubra produtos de qualidade premium para potencializar seus resultados na musculação e fitness.</p>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Criar Conta no FitDelivery</h2>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        {{ user_form.username.errors }}
+                        <label for="id_username">Usuário *</label>
+                        {{ user_form.username }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ user_form.password1.errors }}
+                        <label for="id_password1">Senha *</label>
+                        {{ user_form.password1 }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ user_form.password2.errors }}
+                        <label for="id_password2">Confirmação de Senha *</label>
+                        {{ user_form.password2 }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Cadastrar Agora" class="btn-submit">
+                    </div>
+                </form>
+                
+                <div class="privacy-text">
+                    Ao continuar, você concorda em receber comunicações do FitDelivery.<br>
+                    Confira nossa <a href="#">Declaração de Privacidade</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Adicionar efeitos de interação
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateX(5px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Validação simples de senha
+        const password1 = document.getElementById('id_password1');
+        const password2 = document.getElementById('id_password2');
+        
+        if (password1 && password2) {
+            function validatePasswords() {
+                if (password1.value && password2.value && password1.value !== password2.value) {
+                    password2.style.borderColor = '#FF3366';
+                } else {
+                    password2.style.borderColor = '#e1e5e9';
+                }
+            }
+            
+            password1.addEventListener('input', validatePasswords);
+            password2.addEventListener('input', validatePasswords);
+        }
+    });
+</script>
+
+{% endblock %}
