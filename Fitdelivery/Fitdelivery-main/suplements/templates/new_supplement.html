@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .form-page-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .form-wrapper {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 600px;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-header h2 {
+        color: #333;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .form-header p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .modern-form {
+        width: 100%;
+    }
+
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .modern-table th,
+    .modern-table td {
+        padding: 0;
+        border: none;
+        vertical-align: top;
+    }
+
+    .modern-table th {
+        text-align: left;
+        padding-bottom: 8px;
+        padding-right: 15px;
+        width: 30%;
+    }
+
+    .modern-table td {
+        padding-bottom: 25px;
+        width: 70%;
+    }
+
+    .modern-table tr:last-child td {
+        padding-bottom: 0;
+    }
+
+    .modern-table label {
+        display: block;
+        color: #333;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .modern-table input[type="text"],
+    .modern-table input[type="email"],
+    .modern-table input[type="password"],
+    .modern-table input[type="number"],
+    .modern-table input[type="tel"],
+    .modern-table input[type="url"],
+    .modern-table input[type="date"],
+    .modern-table input[type="time"],
+    .modern-table input[type="datetime-local"],
+    .modern-table input[type="file"],
+    .modern-table textarea,
+    .modern-table select {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        outline: none;
+    }
+
+    .modern-table input:focus,
+    .modern-table textarea:focus,
+    .modern-table select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .modern-table textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .modern-table select {
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        padding-right: 40px;
+        appearance: none;
+    }
+
+    .modern-table input[type="file"] {
+        padding: 12px;
+        background: #f8f9fa;
+        border: 2px dashed #e1e5e9;
+        cursor: pointer;
+    }
+
+    .modern-table input[type="file"]:hover {
+        border-color: #667eea;
+        background: #f0f2ff;
+    }
+
+    .modern-table input[type="checkbox"],
+    .modern-table input[type="radio"] {
+        width: auto;
+        margin-right: 8px;
+        transform: scale(1.2);
+        accent-color: #667eea;
+    }
+
+    /* Estilização para campos de checkbox e radio em labels */
+    .modern-table label:has(input[type="checkbox"]),
+    .modern-table label:has(input[type="radio"]) {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .modern-table label:has(input[type="checkbox"]):hover,
+    .modern-table label:has(input[type="radio"]):hover {
+        background-color: #f0f2ff;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        margin-top: 30px;
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(-1px);
+    }
+
+    /* Tratamento de erros do Django */
+    .errorlist {
+        list-style: none;
+        color: #e53e3e;
+        font-size: 0.85rem;
+        margin: 8px 0;
+        padding: 10px;
+        background: rgba(229, 62, 62, 0.1);
+        border-radius: 8px;
+        border-left: 4px solid #e53e3e;
+    }
+
+    .errorlist li {
+        margin-bottom: 5px;
+    }
+
+    .errorlist li:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Mensagens de sucesso */
+    .successlist {
+        list-style: none;
+        color: #38a169;
+        font-size: 0.85rem;
+        margin: 8px 0;
+        padding: 10px;
+        background: rgba(56, 161, 105, 0.1);
+        border-radius: 8px;
+        border-left: 4px solid #38a169;
+    }
+
+    /* Animações */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .modern-table tr {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    .modern-table tr:nth-child(1) { animation-delay: 0.1s; }
+    .modern-table tr:nth-child(2) { animation-delay: 0.2s; }
+    .modern-table tr:nth-child(3) { animation-delay: 0.3s; }
+    .modern-table tr:nth-child(4) { animation-delay: 0.4s; }
+    .modern-table tr:nth-child(5) { animation-delay: 0.5s; }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .form-wrapper {
+            padding: 30px 20px;
+            margin: 10px;
+            border-radius: 15px;
+        }
+
+        .form-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .modern-table th,
+        .modern-table td {
+            display: block;
+            width: 100%;
+            padding-right: 0;
+        }
+
+        .modern-table th {
+            padding-bottom: 5px;
+        }
+
+        .modern-table td {
+            padding-bottom: 20px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .form-page-container {
+            padding: 10px;
+        }
+
+        .form-wrapper {
+            padding: 25px 15px;
+        }
+
+        .modern-table input,
+        .modern-table textarea,
+        .modern-table select {
+            padding: 12px;
+        }
+
+        .btn-submit {
+            padding: 15px;
+            font-size: 1rem;
+        }
+    }
+
+    /* Efeitos hover para melhor UX */
+    .modern-table tr {
+        transition: all 0.3s ease;
+    }
+
+    .modern-table tr:hover {
+        transform: translateX(5px);
+    }
+
+    /* Loading state para o botão */
+    .btn-submit:disabled {
+        background: #cbd5e0;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* Estilo para campos obrigatórios */
+    .modern-table label::after {
+        content: "";
+    }
+
+    .modern-table .required label::after {
+        content: " *";
+        color: #e53e3e;
+        font-weight: bold;
+    }
+</style>
+
+<div class="form-page-container">
+    <div class="form-wrapper">
+        <div class="form-header">
+            <h2>Formulário de Cadastro</h2>
+            <p>Preencha os campos abaixo com suas informações</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="modern-form">
+            {% csrf_token %}
+
+            <table class="modern-table">
+                {{ form.as_table }}
+            </table>
+
+            <input type="submit" value="Cadastrar" class="btn btn-primary btn-submit">
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Adicionar classes para campos obrigatórios
+        const labels = document.querySelectorAll('.modern-table label');
+        labels.forEach(label => {
+            const input = label.parentElement.querySelector('input, select, textarea');
+            if (input && input.hasAttribute('required')) {
+                label.parentElement.classList.add('required');
+            }
+        });
+
+        // Efeitos de foco aprimorados
+        const inputs = document.querySelectorAll('.modern-table input, .modern-table textarea, .modern-table select');
+        
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.closest('tr').style.transform = 'translateX(8px)';
+                this.closest('tr').style.background = 'rgba(102, 126, 234, 0.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.closest('tr').style.transform = 'translateX(0)';
+                this.closest('tr').style.background = 'transparent';
+            });
+
+            // Validação em tempo real visual
+            input.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.style.borderColor = '#38a169';
+                } else if (this.value.length > 0) {
+                    this.style.borderColor = '#e53e3e';
+                } else {
+                    this.style.borderColor = '#e1e5e9';
+                }
+            });
+        });
+
+        // Estado de carregamento no submit
+        const form = document.querySelector('.modern-form');
+        const submitBtn = document.querySelector('.btn-submit');
+        
+        form.addEventListener('submit', function() {
+            submitBtn.disabled = true;
+            submitBtn.value = 'Cadastrando...';
+            submitBtn.style.background = '#cbd5e0';
+        });
+
+        // Tradução automática de placeholders e labels comuns
+        const translations = {
+            'Name:': 'Nome:',
+            'Brand:': 'Marca:',
+            'Category:': 'Categoria:',
+            'Vendor:': 'Fornecedor:',
+            'Description:': 'Descrição:',
+            'Price:': 'Preço:',
+            'Stock quantity:': 'Quantidade em estoque:',
+            'Photo:': 'Foto:',
+            'Email:': 'E-mail:',
+            'Password:': 'Senha:',
+            'Phone:': 'Telefone:',
+            'Address:': 'Endereço:',
+            'Date:': 'Data:',
+            'Username:': 'Nome de usuário:',
+            'First name:': 'Primeiro nome:',
+            'Last name:': 'Sobrenome:',
+            'Submit': 'Enviar',
+            'Save': 'Salvar',
+            'Register': 'Cadastrar',
+            'Create': 'Criar',
+            'Update': 'Atualizar',
+            'Delete': 'Excluir',
+            'Choose File': 'Escolher Arquivo',
+            'No file chosen': 'Nenhum arquivo escolhido',
+            '--------': '--------'
+        };
+
+        // Aplicar traduções automaticamente
+        document.querySelectorAll('label').forEach(label => {
+            const text = label.textContent.trim();
+            if (translations[text]) {
+                label.textContent = translations[text];
+            }
+        });
+
+        // Traduzir botões
+        document.querySelectorAll('input[type="submit"], button[type="submit"]').forEach(btn => {
+            const value = btn.value || btn.textContent;
+            if (translations[value]) {
+                if (btn.value) btn.value = translations[value];
+                if (btn.textContent) btn.textContent = translations[value];
+            }
+        });
+
+        // Traduzir options de select
+        document.querySelectorAll('select option').forEach(option => {
+            const text = option.textContent.trim();
+            if (translations[text]) {
+                option.textContent = translations[text];
+            }
+        });
+
+        // Melhorar campos de arquivo
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    this.style.borderColor = '#38a169';
+                    this.style.background = '#f0fff4';
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="product-detail-container">
+    <div class="product-card">
+        <div class="product-header">
+            <h1 class="product-title">{{ object.name }}</h1>
+            <div class="product-category">
+                <span class="category-label">Categoria:</span>
+                <span class="category-value">{{ object.category.name }}</span>
+            </div>
+        </div>
+        
+        <!-- Seção da Imagem -->
+        <div class="product-image-section">
+            <div class="image-container">
+                <img 
+                    class="product-image" 
+                    src="{% if object.photo %}{{ object.photo.url }}{% else %}{% static 'images/default-supplement.jpg' %}{% endif %}" 
+                    alt="{{ object.name }}"
+                    loading="lazy"
+                />
+                <div class="image-overlay">
+                    <span class="zoom-hint">🔍 Clique para ampliar</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-info">
+            <div class="price-section">
+                <span class="price-label">Preço:</span>
+                <span class="price-value">R$ {{ object.price }}</span>
+            </div>
+            
+            <div class="description-section">
+                <h3 class="description-label">Descrição:</h3>
+                <p class="description-text">{{ object.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-detail-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.product-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.product-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.product-category {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+}
+
+.category-label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.category-value {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+/* Seção da Imagem */
+.product-image-section {
+    padding: 2rem;
+    background: linear-gradient(45deg, #f8fafc, #ffffff);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.image-container {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.image-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.product-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.image-container:hover .product-image {
+    filter: brightness(1.1) contrast(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.zoom-hint {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.product-info {
+    padding: 2rem;
+}
+
+.price-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.price-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-right: 1rem;
+    opacity: 0.9;
+}
+
+.price-value {
+    font-size: 2rem;
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.description-section {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.description-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #667eea;
+    position: relative;
+}
+
+.description-label::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #764ba2;
+}
+
+.description-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #6b7280;
+    margin: 0;
+    text-align: justify;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .product-detail-container {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+    }
+    
+    .product-header {
+        padding: 1.5rem;
+    }
+    
+    .product-title {
+        font-size: 1.5rem;
+    }
+    
+    .product-image-section {
+        padding: 1.5rem;
+    }
+    
+    .image-container {
+        max-width: 100%;
+    }
+    
+    .product-image {
+        height: 280px;
+    }
+    
+    .product-info {
+        padding: 1.5rem;
+    }
+    
+    .price-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .price-label {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .price-value {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-category {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .category-label {
+        margin-right: 0;
+    }
+    
+    .product-image {
+        height: 250px;
+    }
+    
+    .zoom-hint {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Efeito de clique na imagem */
+.image-container:active {
+    transform: scale(0.98);
+}
+</style>
+
+<script>
+// Adicionar funcionalidade de zoom/modal para a imagem
+document.addEventListener('DOMContentLoaded', function() {
+    const imageContainer = document.querySelector('.image-container');
+    const productImage = document.querySelector('.product-image');
+    
+    if (imageContainer && productImage) {
+        imageContainer.addEventListener('click', function() {
+            // Criar modal para exibir imagem em tamanho grande
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                cursor: pointer;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            const modalImage = document.createElement('img');
+            modalImage.src = productImage.src;
+            modalImage.alt = productImage.alt;
+            modalImage.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                object-fit: contain;
+                border-radius: 8px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            `;
+            
+            modal.appendChild(modalImage);
+            document.body.appendChild(modal);
+            
+            // Fechar modal ao clicar
+            modal.addEventListener('click', function() {
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                }, 300);
+                
+            });
+        });
+    }
+});
+
+// Adicionar animações CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

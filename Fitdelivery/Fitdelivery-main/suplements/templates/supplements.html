@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.01)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.01)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .hero-section {
+      text-align: center;
+      margin-bottom: 60px;
+      color: white;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-section h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .hero-section p {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .promo-banner {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .promo-banner img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .promo-banner img:hover {
+      transform: scale(1.02);
+    }
+
+    .supplement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      padding: 20px 0;
+      margin: 0 auto;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    .supplement-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    .supplement-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .supplement-card:hover::before {
+      opacity: 1;
+    }
+
+    .supplement-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+      background: white;
+    }
+
+    .supplement-card a {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .supplement-card-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: all 0.4s ease;
+    }
+
+    .supplement-card:hover .supplement-card-image {
+      transform: scale(1.1);
+      filter: brightness(1.1);
+    }
+
+    .supplement-card-content {
+      padding: 24px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .supplement-card h3 {
+      font-size: 1.4rem;
+      margin: 0 0 12px 0;
+      color: #2d3748;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .supplement-card p {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: #718096;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .supplement-card .price {
+      font-size: 1.5rem;
+      color: #38a169;
+      font-weight: 800;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .supplement-card .price::before {
+      content: '💰';
+      font-size: 1.2rem;
+    }
+
+    .supplement-card .category {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea20, #764ba220);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .supplement-card-footer {
+      margin-top: auto;
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .no-results {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-top: 60px;
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 80px 40px;
+      margin-top: 80px;
+      text-align: center;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 0.8s ease-out 0.6s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .info-section:hover::before {
+      left: 100%;
+    }
+
+    .info-section h2 {
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+      color: #2d3748;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .info-section p {
+      font-size: 1.2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      color: #4a5568;
+      line-height: 1.8;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section h1 {
+        font-size: 2.5rem;
+      }
+      
+      .supplement-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 15px 0;
+      }
+      
+      .supplement-card h3 {
+        font-size: 1.2rem;
+      }
+      
+      .info-section {
+        padding: 60px 20px;
+      }
+      
+      .info-section h2 {
+        font-size: 2.2rem;
+      }
+    }
+
+    /* Animações de entrada escalonadas para os cards */
+    .supplement-card {
+      animation: slideInUp 0.6s ease-out both;
+    }
+    
+    .supplement-card:nth-child(1) { animation-delay: 0.1s; }
+    .supplement-card:nth-child(2) { animation-delay: 0.2s; }
+    .supplement-card:nth-child(3) { animation-delay: 0.3s; }
+    .supplement-card:nth-child(4) { animation-delay: 0.4s; }
+    .supplement-card:nth-child(5) { animation-delay: 0.5s; }
+    .supplement-card:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+  </style>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1>Suplementos Premium</h1>
+      <p>Descubra os melhores suplementos para potencializar seus resultados e alcançar seus objetivos de saúde e performance</p>
+    </div>
+
+    <!-- Banner Promocional -->
+    <div class="promo-banner">
+      <img src="{% static 'bannercopy.jpg' %}" alt="Promoção IntegralMedica: até 20% OFF" />
+    </div>
+
+    <!-- Grade de suplementos -->
+    <div class="supplement-grid">
+      {% if supplements %}
+        {% for supplement in supplements %}
+          <div class="supplement-card">
+            <a href="{% url 'supplement_detail' supplement.pk %}">
+              <img class="supplement-card-image" src="{% if supplement.photo %}{{ supplement.photo.url }}{% else %}{{ default_image_url }}{% endif %}" alt="{{ supplement.name }}">
+              <div class="supplement-card-content">
+                <h3>{{ supplement.name }}</h3>
+                <p>{{ supplement.description|truncatewords:10 }}</p>
+                <div class="price">R$ {{ supplement.price }}</div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-results">✨ Nenhum suplemento encontrado. Tente uma nova busca!</p>
+      {% endif %}
+    </div>
+
+    <!-- Seção Informativa -->
+    <div class="info-section">
+      <h2>🏆 Sobre Nosso Marketplace</h2>
+      <p>
+        Nosso marketplace de suplementos tem como missão conectar você aos melhores produtos para saúde, performance e bem-estar.
+        Trabalhamos com as principais marcas e garantimos a melhor curadoria de suplementos do Brasil.
+        Explore, compare e compre com confiança. Seu corpo merece o melhor! 💪
+      </p>
+    </div>
+  </div>
+{% endblock %}
